@@ -188,7 +188,7 @@ export default (props) => {
             }
             onClick={() => goTo(SSTI)}
           >
-            Feed RSS
+            SSTI
           </Menu.Item>
           <Menu.Item
             key='13'
