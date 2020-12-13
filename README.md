@@ -1,21 +1,21 @@
 <div align="center">
-<img alt="logo_hack_tools" src="https://i.imgur.com/evnvda2.png" />
-<h1>Welcome to HackTools 🛠</h1>
-<p>
-  <img alt="Version" src="https://img.shields.io/badge/version-0.1.4-blue.svg?cacheSeconds=2592000" />
-  <img alt="release" src="https://img.shields.io/github/v/release/LasCC/Hack-Tools?color=yellow" />
-  <a href="https://addons.mozilla.org/en-US/firefox/addon/hacktools" target="_blank">
-	<img alt="mozilla" src="https://img.shields.io/amo/v/hacktools?color=purple&label=mozilla%20addons&logo=mozilla" />
-  </a>
-  <img alt="commit" src="https://img.shields.io/github/last-commit/LasCC/Hack-Tools" />
-  <img alt="stars" src="https://img.shields.io/github/stars/LasCC/Hack-Tools?style=social" />
-</p>
-<p align="center">
+  <img alt="logo_hack_tools" src="https://i.imgur.com/evnvda2.png" />
+  <h1>Welcome to HackTools 🛠</h1>
+  <p>
+    <img alt="Version" src="https://img.shields.io/badge/version-0.2.1-blue.svg?cacheSeconds=2592000" />
+    <img alt="release" src="https://img.shields.io/github/v/release/LasCC/Hack-Tools?color=yellow" />
+    <a href="https://addons.mozilla.org/en-US/firefox/addon/hacktools" target="_blank">
+    <img alt="mozilla" src="https://img.shields.io/amo/v/hacktools?color=purple&label=mozilla%20addons&logo=mozilla" />
+    </a>
+    <img alt="commit" src="https://img.shields.io/github/last-commit/LasCC/Hack-Tools" />
+    <img alt="stars" src="https://img.shields.io/github/stars/LasCC/Hack-Tools?style=social" />
+  </p>
+  <p align="center">
     <a href="#the-all-in-one-red-team-browser-extension-for-web-pentesters"><b>Introduction</b></a>
     &nbsp;&nbsp;&mdash;&nbsp;&nbsp;
     <a href="#preview"><b>Preview</b></a>
     &nbsp;&nbsp;&mdash;&nbsp;&nbsp;
-    <a href="#install-the-application"><b>Install</b></a>
+    <a href="#install-the-extension"><b>Install</b></a>
     &nbsp;&nbsp;&mdash;&nbsp;&nbsp;
     <a href="#build-from-source-code"><b>Build</b></a>
     &nbsp;&nbsp;&mdash;&nbsp;&nbsp;
@@ -37,8 +37,11 @@ With the extension you **no longer need to search for payloads in different webs
 - Basic SQLi payloads
 - Local file inclusion payloads (LFI)
 - Base64 Encoder / Decoder
-- Hash Generator (MD5, SHA1, SHA256, SHA512)
+- Hash Generator (MD5, SHA1, SHA256, SHA512, SM3)
 - Useful Linux commands (Port Forwarding, SUID)
+- RSS Feed (Exploit DB, Cisco Security Advisories, CXSECURITY)
+- CVE Search Engine
+- Various method of data exfiltration and download from a remote machine
 
 ## Preview
 
@@ -58,7 +61,7 @@ With the extension you **no longer need to search for payloads in different webs
   <img alt="preview_4" src="https://i.imgur.com/KrDX7t6.png" />
 </div>
 
-# Install the application
+# Install the extension
 
 ## Chromium based browser
 
@@ -72,7 +75,7 @@ You can download **HackTools** on the Firefox browser add-ons [here.](https://ad
 
 ## Build from source code
 
-```bash
+```node
 yarn install && yarn build
 ```
 
