@@ -1,23 +1,25 @@
-import React from 'react';
-import { Layout, Menu, Typography, Button } from 'antd';
-import { CopyrightCircleOutlined, FullscreenOutlined } from '@ant-design/icons';
+import React, { useEffect } from 'react';
+import { Layout, Menu, Typography, Button, Badge } from 'antd';
+import { CopyrightCircleOutlined, FullscreenOutlined, ArrowsAltOutlined } from '@ant-design/icons';
 import { createFromIconfontCN } from '@ant-design/icons';
 import { goTo } from 'react-chrome-extension-router';
-import ReverseShell from './ReverseShell';
-import PhpReverseShell from './PhpReverseShell';
-import TtySpawnShell from './TtySpawnShell';
+import ReverseShell from './Linux_Shell/ReverseShell';
+import PhpReverseShell from './Web/PhpReverseShell';
+import TtySpawnShell from './Linux_Shell/TtySpawnShell';
 import Base64Encode from './encoding/Base64Encode';
 import HexEncode from './encoding/HexEncode';
 import Hashing from './encoding/Hashing';
-import URLDecode from './encoding/URLEncode';
-import LinuxCommands from './LinuxCommands';
+import LinuxCommands from './Linux_Shell/LinuxCommands';
+import PowershellCommands from './Linux_Shell/PowershellCommands';
 import LFI from './web/LFI';
 import XSS from './web/XSS';
 import SQLi from './web/SqlInjection';
 import AboutUs from './AboutUs';
-import FeedRSS from './FeedRSS';
-import SSTI from './web/SSTI';
-import FileTransfer from './file_transfer/File_transfer';
+import FeedRSS from './RSS/FeedRSS';
+import FileTransfer from './File_Transfer/File_Transfer';
+import PersistedState from 'use-persisted-state';
+import MSFBuilder from './Linux_Shell/MSFBuilder';
+
 const { Paragraph } = Typography;
 const { Sider, Content, Footer } = Layout;
 const IconFont = createFromIconfontCN({
@@ -25,10 +27,149 @@ const IconFont = createFromIconfontCN({
 });
 
 export default (props) => {
+	const Tabs = [
+		{
+			key: '1',
+			icon: <IconFont type='icon-gnubash' style={{ fontSize: '1.5em', marginTop: 3 }} />,
+			name: 'Reverse Shell',
+			componentRoute: ReverseShell
+		},
+		{
+			key: '2',
+			icon: <IconFont type='icon-php' style={{ fontSize: '1.5em', marginTop: 3 }} />,
+			name: 'PHP Reverse Shell',
+			componentRoute: PhpReverseShell
+		},
+		{
+			key: '3',
+			icon: <IconFont type='icon-lvzhou_yuanchengTelnet' style={{ fontSize: '1.5em', marginTop: 3 }} />,
+			name: 'TTY Spawn Shell',
+			componentRoute: TtySpawnShell
+		},
+		{
+			key: '4',
+			icon: <IconFont type='icon-linux' style={{ fontSize: '1.5em', marginTop: 3 }} />,
+			name: 'Useful Linux commands',
+			componentRoute: LinuxCommands
+		},
+		{
+			key: '5',
+			icon: (
+				<Badge dot size='default' style={{ transform: `translate(5px, 3px)` }}>
+					<IconFont type='icon-powershell' style={{ fontSize: '1.5em', marginTop: 3 }} />
+				</Badge>
+			),
+			name: '',
+			componentRoute: PowershellCommands
+		},
+		{
+			key: '6',
+			icon: <IconFont type='icon-transfer' style={{ fontSize: '1.5em', marginTop: 3 }} />,
+			name: 'Transfer Methods',
+			componentRoute: FileTransfer
+		},
+		{
+			key: '7',
+			icon: <IconFont type='icon-l-file' style={{ fontSize: '1.5em', marginTop: 3 }} />,
+			name: 'LFI',
+			componentRoute: LFI
+		},
+		{
+			key: '8',
+			icon: <IconFont type='icon-js' style={{ fontSize: '1.5em', marginTop: 3 }} />,
+			name: 'XSS',
+			componentRoute: XSS
+		},
+		{
+			key: '9',
+			icon: <IconFont type='icon-sql' style={{ fontSize: '1.5em', marginTop: 3 }} />,
+			name: 'SQL Injection',
+			componentRoute: SQLi
+		},
+		{
+			key: '10',
+			icon: <IconFont type='icon-jiemaleixing' style={{ fontSize: '1.5em', marginTop: 3 }} />,
+			name: 'Base64 Encoder / Decoder',
+			componentRoute: Base64Encode
+		},
+		{
+			key: '11',
+			icon: <IconFont type='icon-hash' style={{ fontSize: '1.5em', marginTop: 3 }} />,
+			name: 'Hashing',
+			componentRoute: Hashing
+		},
+		{
+			key: '12',
+			icon: <IconFont type='icon-hexo' style={{ fontSize: '1.5em', marginTop: 3 }} />,
+			name: 'Hexadecimal Encoder / Decoder',
+			componentRoute: HexEncode
+		},
+		{
+			key: '13',
+			icon: <IconFont type='icon-Cloud' style={{ fontSize: '1.5em', marginTop: 3 }} />,
+			name: 'Feed RSS',
+			componentRoute: FeedRSS
+		},
+		{
+			key: '14',
+			icon: (
+				<Badge dot size='default' style={{ transform: `translate(3px, 5px)` }}>
+					<IconFont type='icon-shield' style={{ fontSize: '1.5em', marginTop: 3 }} />
+				</Badge>
+			),
+			name: '',
+			componentRoute: MSFBuilder
+		},
+		{
+			key: '15',
+			icon: <IconFont type='icon-about' style={{ fontSize: '1.5em', marginTop: 3 }} />,
+			name: 'About us',
+			componentRoute: AboutUs
+		}
+	];
+
+	const MenuItemsLists = Tabs.map((item) => (
+		<Menu.Item key={item.key} icon={item.icon} onClick={() => navigate(item)}>
+			{item.name}
+		</Menu.Item>
+	));
+
+	const useMenuIndex = PersistedState('tab_index_cache');
+	const [ index, setIndex ] = useMenuIndex('1');
+
+	const navigate = ({ componentRoute, key }) => {
+		goTo(componentRoute);
+		setIndex(key, componentRoute);
+	};
+	const windowMode = () => {
+		const width = 1100;
+		const height = 800;
+
+		chrome.windows.create({
+			url: chrome.extension.getURL('index.html'),
+			width: width,
+			height: height,
+			type: 'popup'
+		});
+	};
+
+	useEffect(() => {
+		const currentComponent = Tabs.filter((obj) => obj.key === index)[0].componentRoute;
+		goTo(currentComponent);
+	}, []);
+
 	const target = window.location.href;
 	return (
 		<Layout style={{ minHeight: '100vh' }}>
-			<Sider collapsed={true}>
+			<Sider
+				collapsed={true}
+				style={{
+					overflow: 'auto',
+					height: '100vh',
+					position: 'fixed',
+					left: 0
+				}}
+			>
 				<div className='logo'>
 					<svg xmlns='http://www.w3.org/2000/svg' width='45' height='35' viewBox='0 0 134.624 80.584'>
 						<g transform='translate(-6.457 -23.8)'>
@@ -37,123 +178,18 @@ export default (props) => {
 								transform='translate(0 0)'
 								fill='#F0F2F5'
 								stroke='#F0F2F5'
-								stroke-width='2'
+								strokeWidth='2'
 							/>
 						</g>
 					</svg>
 				</div>
-				<Menu theme='dark' defaultSelectedKeys={[ '1' ]} mode='inline'>
-					<Menu.Item
-						key='1'
-						icon={<IconFont type='icon-gnubash' style={{ fontSize: '1.5em', marginTop: 3 }} />}
-						onClick={() => goTo(ReverseShell)}
-					>
-						Reverse Shell
-					</Menu.Item>
-					<Menu.Item
-						key='2'
-						icon={<IconFont type='icon-php' style={{ fontSize: '1.5em', marginTop: 3 }} />}
-						onClick={() => goTo(PhpReverseShell)}
-					>
-						PHP Reverse Shell
-					</Menu.Item>
-					<Menu.Item
-						key='3'
-						icon={
-							<IconFont type='icon-lvzhou_yuanchengTelnet' style={{ fontSize: '1.5em', marginTop: 3 }} />
-						}
-						onClick={() => goTo(TtySpawnShell)}
-					>
-						TTY Spawn Shell
-					</Menu.Item>
-					<Menu.Item
-						key='4'
-						icon={<IconFont type='icon-linux' style={{ fontSize: '1.5em', marginTop: 3 }} />}
-						onClick={() => goTo(LinuxCommands)}
-					>
-						Useful Linux commands
-					</Menu.Item>
-					<Menu.Item
-						key='5'
-						icon={<IconFont type='icon-transfer' style={{ fontSize: '1.5em', marginTop: 3 }} />}
-						onClick={() => goTo(FileTransfer)}
-					>
-						Transfer Methods
-					</Menu.Item>
-					<Menu.Item
-						key='6'
-						icon={<IconFont style={{ fontSize: '1.5em', marginTop: 3 }} type='icon-l-file' />}
-						onClick={() => goTo(LFI)}
-					>
-						LFI
-					</Menu.Item>
-					<Menu.Item
-						key='7'
-						icon={<IconFont style={{ fontSize: '1.5em', marginTop: 3 }} type='icon-js' />}
-						onClick={() => goTo(XSS)}
-					>
-						XSS
-					</Menu.Item>
-					<Menu.Item
-						key='8'
-						icon={<IconFont style={{ fontSize: '1.5em', marginTop: 3 }} type='icon-sql' />}
-						onClick={() => goTo(SQLi)}
-					>
-						SQL Injection
-					</Menu.Item>
-					<Menu.Item
-						key='9'
-						icon={<IconFont style={{ fontSize: '1.5em', marginTop: 3 }} type='icon-jiemaleixing' />}
-						onClick={() => goTo(Base64Encode)}
-					>
-						Base64 Encoder / Decoder
-					</Menu.Item>
-					<Menu.Item
-						key='10'
-						icon={<IconFont style={{ fontSize: '1.5em', marginTop: 3 }} type='icon-hash' />}
-						onClick={() => goTo(Hashing)}
-					>
-						Hashing
-					</Menu.Item>
-					<Menu.Item
-						key='11'
-						icon={<IconFont style={{ fontSize: '1.5em', marginTop: 3 }} type='icon-url' />}
-						onClick={() => goTo(URLDecode)}
-					>
-						URL Encoder / Decoder
-					</Menu.Item>
-					<Menu.Item
-						key='12'
-						icon={<IconFont style={{ fontSize: '1.5em', marginTop: 3 }} type='icon-hexo' />}
-						onClick={() => goTo(HexEncode)}
-					>
-						Hexadecimal Encoder / Decoder
-					</Menu.Item>
-					<Menu.Item
-						key='13'
-						icon={<IconFont type='icon-inserttemplate' style={{ fontSize: '1.5em', marginTop: 3 }} />}
-						onClick={() => goTo(SSTI)}
-					>
-						SSTI
-					</Menu.Item>
-					<Menu.Item
-						key='14'
-						icon={<IconFont type='icon-rss' style={{ fontSize: '1.5em', marginTop: 3 }} />}
-						onClick={() => goTo(FeedRSS)}
-					>
-						Feed RSS
-					</Menu.Item>
-					<Menu.Item
-						key='15'
-						icon={<IconFont type='icon-about' style={{ fontSize: '1.5em', marginTop: 3 }} />}
-						onClick={() => goTo(AboutUs)}
-					>
-						About us
-					</Menu.Item>
+
+				<Menu theme='dark' defaultSelectedKeys={[ index ]} mode='inline'>
+					{MenuItemsLists}
 				</Menu>
 			</Sider>
-			<Layout className='site-layout'>
-				<Content style={{ margin: '0 16px' }}>
+			<Layout className='site-layout' style={{ marginLeft: 80 }}>
+				<Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
 					<div className='site-layout-background' style={{ padding: 24, minHeight: 360 }}>
 						{props.children}
 					</div>
@@ -162,11 +198,14 @@ export default (props) => {
 					<CopyrightCircleOutlined /> Hack Tools - The all in one Red team browser extension for web
 					pentesters
 					<Paragraph style={{ textAlign: 'center' }}>Ludovic COULON - Riadh BOUCHAHOUA</Paragraph>
-					<pre style={{ textAlign: 'center' }}>HackTools Version - 0.2.1</pre>
+					<pre style={{ textAlign: 'center' }}>HackTools Version - 0.3.7</pre>
 					<Button icon={<FullscreenOutlined style={{ margin: 5 }} />} type='link'>
-						<a href={target} target='_blank'>
+						<a href={target} rel='noreferrer noopener' target='_blank'>
 							Fullscreen mode
 						</a>
+					</Button>
+					<Button icon={<ArrowsAltOutlined style={{ margin: 5 }} />} onClick={() => windowMode()} type='link'>
+						Pop-up mode
 					</Button>
 				</Footer>
 			</Layout>
