@@ -2,7 +2,7 @@
   <img alt="logo_hack_tools" src="https://i.postimg.cc/GtLdZ2rZ/noun-Panama-hat-1454601.png" />
   <h1>Welcome to HackTools 🛠</h1>
   <p>
-    <img alt="Version" src="https://img.shields.io/badge/version-0.3.7-blue.svg?cacheSeconds=2592000&style=for-the-badge" />
+    <img alt="Version" src="https://img.shields.io/badge/version-0.3.8-blue.svg?cacheSeconds=2592000&style=for-the-badge" />
     <img alt="release" src="https://img.shields.io/github/v/release/LasCC/Hack-Tools?color=yellow&style=for-the-badge" />
     <a href="https://addons.mozilla.org/en-US/firefox/addon/hacktools" target="_blank">
       <img alt="mozilla" src="https://img.shields.io/amo/v/hacktools?color=purple&label=mozilla%20addons&logo=mozilla&style=for-the-badge" />
@@ -12,6 +12,9 @@
     </a>
     <img alt="Downloads" src="https://img.shields.io/github/downloads/LasCC/Hack-Tools/total.svg?style=for-the-badge" />
     <img alt="commit" src="https://img.shields.io/github/last-commit/LasCC/Hack-Tools?style=for-the-badge" />
+    <a href="https://inventory.rawsec.ml/" target="_blank">
+      <img alt="RawSecInventory" src="https://inventory.raw.pm/img/badges/Rawsec-inventoried-FF5050_for-the-badge.svg" />
+    <a/>
     <img alt="stars" src="https://img.shields.io/github/stars/LasCC/Hack-Tools?style=social" />
     <a href="https://lgtm.com/projects/g/LasCC/Hack-Tools/context:javascript">
       <img alt="Language grade: JavaScript" src="https://img.shields.io/lgtm/grade/javascript/g/LasCC/Hack-Tools.svg?logo=lgtm&logoWidth=18"/>

