@@ -18,7 +18,6 @@ import FeedRSS from './rss/FeedRSS';
 import FileTransfer from './file_transfer/File_transfer';
 import PersistedState from 'use-persisted-state';
 import MSFBuilder from './linux/MSFBuilder';
-import HTTPUtils from './http_utils/HTTP-Utils';
 import DynamicTheme from '../theming';
 import { themes } from '../themes';
 import EchoBase64 from './file_transfer/ObfuscatedFiles';
@@ -39,7 +38,7 @@ export default function LayoutApp ( props: {
     children: boolean | React.ReactChild | React.ReactFragment | React.ReactPortal | null | undefined;
 } ) {
 
-    const useDefaultTheme = PersistedState( 'default_colored_theme' );
+    const useDefaultTheme = PersistedState<string>( 'default_colored_theme' );
     const [ themeId, setThemeId ] = useDefaultTheme( defaultTheme.id );
     const selectThemeId = useCallback(
         ( option ) => setThemeId( option as string ),
@@ -174,8 +173,8 @@ export default function LayoutApp ( props: {
         </Menu.Item>
     ) );
 
-    //const useMenuIndex = PersistedState( 'tab_index_cache' ); // Disabled for now
-    const [ index, setIndex ] = useState( '1' );
+    const useMenuIndex = PersistedState<string>( 'tab_index_cache' ); // Disabled for now
+    const [ index, setIndex ] = useMenuIndex( '1' );
 
     const navigate = ( { componentRoute, key }: { componentRoute: React.FunctionComponent; key: string } ) => {
         goTo( componentRoute );
